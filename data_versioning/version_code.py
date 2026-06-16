@@ -18,6 +18,14 @@ new_row = {
 }
 df.loc[len(df.index)] = new_row
 
+# Adding data to the saved data file for the version 3
+new_row2 = {
+    'Name' : 'Gautam Mishra',
+    'Age' : 23,
+    'City' : 'Madhubani Bihar'
+}
+df.loc[len(df.index)] = new_row2
+
 data_dir = 'data'
 
 os.makedirs(data_dir, exist_ok=True)
