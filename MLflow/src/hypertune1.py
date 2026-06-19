@@ -1,4 +1,4 @@
-# import mlflow
+import mlflow
 import pandas as pd
 from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
@@ -24,11 +24,67 @@ param_grid = {
 grid_search = GridSearchCV(estimator=rf, param_grid=param_grid, cv=5, n_jobs=-1, verbose=2)
 
 # Run without MLflow 
-grid_search.fit(X_train ,y_train)
+# grid_search.fit(X_train ,y_train)
 
-# Displaying the best params and best score
-best_params = grid_search.best_params_
-best_score = grid_search.best_score_
+# # Displaying the best params and best score
+# best_params = grid_search.best_params_
+# best_score = grid_search.best_score_
 
-print(best_params)
-print(best_score)
+# print(best_params)
+# print(best_score)
+
+mlflow.autolog()
+
+# Run the code using mlflow
+import dagshub
+dagshub.init(
+    repo_owner='GautamMishra20',
+    repo_name='MLOPS',
+    mlflow=True
+)
+
+mlflow.autolog()
+
+mlflow.set_tracking_uri(
+    "https://dagshub.com/GautamMishra20/MLOPS.mlflow"
+)
+
+mlflow.set_experiment(
+    "breast-cancer-hyper_tune"
+)
+
+with mlflow.start_run(run_name='breast-cancer-hyper_tune') as parent:
+    grid_search.fit(X_train, y_train)
+    
+    # Displaying the best parameters and the best score
+    best_params = grid_search.best_params_
+    best_score = grid_search.best_score_
+    
+    # log params
+    mlflow.log_params(best_params)
+    
+    # log metrics
+    mlflow.log_metric('accuracy',best_score)
+    
+    # log training data
+    train_df = X_train.copy()
+    train_df['target'] = y_train
+    
+    train_df = mlflow.data.from_pandas(train_df)
+    mlflow.log_input(train_df,'training')
+    
+    # Log test data
+    test_df = X_test.copy()
+    test_df['target'] = y_test
+    
+    test_df = mlflow.data.from_pandas(test_df)
+    mlflow.log_input(train_df, 'testing')
+    
+    mlflow.log_artifact(__file__)
+    
+    mlflow.sklearn.log_model(grid_search.best_estimator_,'random_forest')
+    
+    mlflow.set_tag('author', 'ravi')
+    
+    print(best_params)
+    print(best_score)
