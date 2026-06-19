@@ -12,7 +12,7 @@ from sklearn.metrics import accuracy_score, confusion_matrix
 mlflow.set_tracking_uri("sqlite:///mlflow.db")
 
 # Create or use an existing experiment
-mlflow.set_experiment("experiment-1")
+mlflow.set_experiment("RandomForest_wine_classification")
 
 
 # Load wine datasets
@@ -30,12 +30,15 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 # Model Parameters
 params = {
-    'max_depth':5,
-    'n_estimators':10
+    'max_depth':10,
+    'n_estimators':5
 }
 
 
 with mlflow.start_run(run_name="RandomForest_Wine"):
+    
+    # That's the mlflow autolog() for logging the details.
+    mlflow.autolog() 
     
     # Train Model
     rf = RandomForestClassifier(
@@ -93,5 +96,14 @@ with mlflow.start_run(run_name="RandomForest_Wine"):
     mlflow.log_artifact(__file__)
 
     print(f"Accuracy: {accuracy:.4f}")
+    
+    # Tags
+    mlflow.set_tags(
+        {
+            'Author':'Ravi',
+            'Project':'Random forest wine classifcation!!!'
+        }
+    )
+     
 
 print("MLflow Run Completed Successfully!")
