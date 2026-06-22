@@ -43,7 +43,7 @@ dagshub.init(
     mlflow=True
 )
 
-mlflow.autolog()
+# mlflow.autolog()
 
 mlflow.set_tracking_uri(
     "https://dagshub.com/GautamMishra20/MLOPS.mlflow"
@@ -52,6 +52,8 @@ mlflow.set_tracking_uri(
 mlflow.set_experiment(
     "breast-cancer-hyper_tune"
 )
+
+mlflow.autolog()
 
 with mlflow.start_run(run_name='breast-cancer-hyper_tune') as parent:
     grid_search.fit(X_train, y_train)
