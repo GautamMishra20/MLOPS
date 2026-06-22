@@ -2,17 +2,25 @@ import pytest
 from app import sq, cube, fifth_power
 
 def test_sq():
-    assert sq(2) == 4 , "Test Failed: Square of 2 should be 4"
-    assert sq(3) == 9 , "Test Failed: Square of 3 should be 9"
+    assert sq(2) == 4
+    assert sq(3) == 9
+    assert sq(-4) == 16
 
 def test_cube():
-    assert sq(2) == 8 , "Test Failed: Square of 2 should be 8"
-    assert sq(3) == 27 , "Test Failed: Square of 3 should be 27"
+    assert cube(2) == 8
+    assert cube(3) == 27
+    assert cube(-2) == -8
 
 def test_fifth_power():
-    assert sq(2) == 32 , "Test Failed: Square of 2 should be 32"
-    assert sq(3) == 243 , "Test Failed: Square of 3 should be 243"
+    assert fifth_power(2) == 32
+    assert fifth_power(3) == 243
+    assert fifth_power(-2) == -32
+
+def test_zero():
+    assert sq(0) == 0
+    assert cube(0) == 0
+    assert fifth_power(0) == 0
 
 def test_invalid_input():
     with pytest.raises(TypeError):
-        sq("string") 
+        sq("string")
